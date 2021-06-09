@@ -59,6 +59,7 @@ function Layout(props) {
         isDroppable={true}
       >
         {generateDOM()}
+
       </StyledResponsiveGridLayout>
     </div>
   );

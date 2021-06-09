@@ -1,9 +1,23 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import styled from 'styled-components'
 import Layout from './Layout';
 
 const StyledApp = styled.div`
   color: white;
+  padding: 20px;
+
+  ul {
+    display: flex;
+    list-style: none;
+
+    li {
+      img {
+        width: 160px;
+        height: 90px;
+        object-fit: cover;
+      }
+    }
+  }
 `
 
 function App() {
@@ -13,11 +27,13 @@ function App() {
     let { files } = event.target
 
     if (FileReader && files && files.length) {
-      let reader = new FileReader()
-      reader.onload = () => {
-        setImgFiles(prevImgs => [...prevImgs, reader.result])
+      for (const file of files) {
+        let reader = new FileReader()
+        reader.onload = () => {
+          setImgFiles(prevImgs => [...prevImgs, reader.result])
+        }
+        reader.readAsDataURL(file)
       }
-      reader.readAsDataURL(files[0]);
     }
   }
 
@@ -26,8 +42,10 @@ function App() {
       <label htmlFor='img'>Upload an image</label>
       <input type="file" name='img' acccept='image/*' multiple {...{onChange}} />
 
-      {imgFiles.map(imgFile => <img src={imgFile}/>)}
-
+      <ul>
+        {imgFiles.map(imgFile => <li><img src={imgFile}/></li>)}
+      </ul>
+      
       <Layout className='layout' rowHeight={30} onLayoutChange={() => {}} cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}/>
     </StyledApp>
   )
