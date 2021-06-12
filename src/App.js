@@ -46,7 +46,7 @@ function App() {
         {imgFiles.map(imgFile => <li><img src={imgFile}/></li>)}
       </ul>
       
-      <Layout className='layout' rowHeight={30} onLayoutChange={() => {}} cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}/>
+      <Layout className='layout' rowHeight={100} cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }} onLayoutChange={() => {}}/>
     </StyledApp>
   )
 }

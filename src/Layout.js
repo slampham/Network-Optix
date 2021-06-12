@@ -1,68 +1,68 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from 'styled-components'
 import _ from "lodash";
 import { Responsive, WidthProvider } from "react-grid-layout";
-const ResponsiveGridLayout = WidthProvider(Responsive);
+const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-const StyledResponsiveGridLayout = styled(ResponsiveGridLayout)`
+const StyledResponsiveGridLayout = styled(ResponsiveReactGridLayout)`
   div {
     color: black;
     background-color: lightgray;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .remove {
+      position: absolute;
+      right: 2px;
+      top: 0;
+      cursor: pointer;
+    }
   }
 `
 
-function generateLayout() {
-  return _.map(_.range(0, 25), function(item, i) {
-    var y = Math.ceil(Math.random() * 4) + 1;
-    return {
-      x: Math.round(Math.random() * 5) * 2,
-      y: Math.floor(i / 6) * y,
-      w: 2,
-      h: y,
-      i: i.toString(),
-    };
-  });
-}
-
-function onDrop(_, layoutItem, _event) {
-  alert(`Dropped element props:\n${JSON.stringify(layoutItem, ['x', 'y', 'w', 'h'], 2)}`)
-}
-
 function Layout(props) {
-  const [currentBreakpoint, setCurrentBreakpoint] = useState('lg')
-  const [mounted, setMounted] = useState(false)
-  const [layouts, setLayouts] = useState({ lg: generateLayout() })
+  const [items, setItems] = useState([])
+  const [newCounter, setNewCounter] = useState(0)
+  const [cols, setCols] = useState(null)
 
-  useEffect(() => setMounted(true), [])
+  function createElement(el) {
+    return (
+      <div key={el.i} data-grid={el}>
+        <span className="text">{el.i}</span>
+        <span className="remove" onClick={() => onRemoveItem(el.i)}>x</span>
+      </div>
+    );
+  }
 
-  function generateDOM() {
-    return _.map(layouts.lg, (l, i) => <div key={i}><span className="text">{i}</span></div>)
+  function onRemoveItem(i) {
+    setItems(prevItems => _.reject(prevItems, { i }))
+  }
+
+  function onAddItem() {
+    setItems(prevItems => prevItems.concat({ // Add a new item. It must have a unique key!
+      i: "n" + newCounter,
+      x: (prevItems.length * 2) % (cols || 12),
+      y: Infinity, // puts it at the bottom
+      w: 2,
+      h: 2,
+    }))
+    setNewCounter(prevCount => prevCount + 1)
+  }
+
+  function onBreakpointChange(breakpoint, cols) {
+    setCols(cols)
   }
 
   return (
     <div>
-      <div> Current Breakpoint: {currentBreakpoint} ({props.cols[currentBreakpoint]} columns)</div>
-
-      <div className="droppable-element" draggable={true} unselectable="on" onDragStart={e => e.dataTransfer.setData("text/plain", "")}>
-        Droppable Element (Drag me!)
-      </div>
-
-      <StyledResponsiveGridLayout
-        {...props}
-        layouts={layouts}
-        onBreakpointChange={breakpoint => setCurrentBreakpoint(breakpoint)}
-        onDrop={onDrop}
-        measureBeforeMount={false}
-        useCSSTransforms={mounted}
-        compactType='vertical'
-        preventCollision={false}
-        isDroppable={true}
-      >
-        {generateDOM()}
-
+      <button onClick={onAddItem}>Add Item</button>
+      <StyledResponsiveGridLayout {...{onBreakpointChange}} {...props} >
+        {items.map(item => createElement(item))}
       </StyledResponsiveGridLayout>
     </div>
-  );
+  )
 }
 
 export default Layout
