@@ -42,11 +42,11 @@ function App() {
       <label htmlFor='img'>Upload an image</label>
       <input type="file" name='img' acccept='image/*' multiple {...{onChange}} />
 
-      <ul>
+      {/* <ul>
         {imgFiles.map(imgFile => <li><img src={imgFile}/></li>)}
-      </ul>
+      </ul> */}
       
-      <Layout className='layout' rowHeight={100} cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }} onLayoutChange={() => {}}/>
+      <Layout {...{imgFiles, setImgFiles}} className='layout' rowHeight={100} cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }} onLayoutChange={() => {}}/>
     </StyledApp>
   )
 }
