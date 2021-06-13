@@ -15,6 +15,12 @@ const StyledResponsiveGridLayout = styled(ResponsiveReactGridLayout)`
       right: 2px;
       top: 0;
       cursor: pointer;
+
+      text-shadow:
+        0.07em 0 black,
+        0 0.07em black,
+        -0.07em 0 black,
+        0 -0.07em black;
     }
   }
 `
@@ -72,13 +78,13 @@ function Layout(props) {
   }
 
   return (
-    <div>
+    <>
       <label htmlFor='img'>Upload an image</label>
       <input type="file" name='img' acccept='image/*' multiple {...{onChange}} />
-      <StyledResponsiveGridLayout onBreakpointChange={(breakpoint, cols) => setCols(cols)} {...props} >
+      <StyledResponsiveGridLayout onBreakpointChange={(_, cols) => setCols(cols)} {...props} >
         {imgs.map(item => createElement(item))}
       </StyledResponsiveGridLayout>
-    </div>
+    </>
   )
 }
 
