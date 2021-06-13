@@ -1,21 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import styled from 'styled-components'
 import { Responsive, WidthProvider } from "react-grid-layout";
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 const StyledResponsiveGridLayout = styled(ResponsiveReactGridLayout)`
-  img {
-    width: 100%;
-    height: 100%;
-  }
-
   div {
-    color: black;
-    background-color: lightgray;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    img {
+      width: 100%;
+      height: 100%;
+    }
 
     .remove {
       position: absolute;
@@ -27,34 +20,42 @@ const StyledResponsiveGridLayout = styled(ResponsiveReactGridLayout)`
 `
 
 function Layout(props) {
-  const [items, setItems] = useState([])
+  const [imgs, setImgs] = useState([])
   const [counter, setCounter] = useState(0)
   const [cols, setCols] = useState(null)
 
-  function onChange(event) {
+  async function onChange(event) {
     const { files } = event.target
 
     if (FileReader && files && files.length) {
-      const newItems = []
+      const promises = []
 
-      for (const [i, file] of Object.entries(files)) {
-        const reader = new FileReader()
-        reader.onload = () => {
-          newItems.push({ // Add a new item. It must have a unique key!
-            i: "n" + (counter + parseInt(i)),
-            x: ((items.length + newItems.length) * 2) % (cols || 12),
-            y: Infinity, // puts it at the bottom
-            w: 2,
-            h: 2,
-            file: reader.result,
-          })
-        }
-        reader.readAsDataURL(file)
+      for (let [i, file] of Object.entries(files)) {
+        i = parseInt(i)
+
+        const promise = new Promise(resolve => {
+          const reader = new FileReader()
+          reader.onload = () => {
+            resolve({ // Add a new item. It must have a unique key!
+              i: "n" + (counter + i),
+              x: ((imgs.length + i) * 2) % (cols || 12),
+              y: Infinity, // puts it at the bottom
+              w: 2,
+              h: 2,
+              file: reader.result,
+            })
+          }
+          reader.readAsDataURL(file)
+        })
+        promises.push(promise)
       }
 
+      const newImgs = await Promise.all(promises).catch(error => console.error(error))
       setCounter(prevCount => prevCount + files.length)
-      setItems(prevItems => [...prevItems, ...newItems])
+      setImgs(prevImgs => [...prevImgs, ...newImgs])
     }
+
+    event.target.value = '' // Reset value because user may want to submit the same pictures again. onChange will detect "change" from nothing to the same pictures
   }
 
   function createElement(el) {
@@ -67,7 +68,7 @@ function Layout(props) {
   }
 
   function onRemoveItem(i) {
-    setItems(prevItems => prevItems.filter(item => item.i !== i))
+    setImgs(prevImgs => prevImgs.filter(item => item.i !== i))
   }
 
   return (
@@ -75,7 +76,7 @@ function Layout(props) {
       <label htmlFor='img'>Upload an image</label>
       <input type="file" name='img' acccept='image/*' multiple {...{onChange}} />
       <StyledResponsiveGridLayout onBreakpointChange={(breakpoint, cols) => setCols(cols)} {...props} >
-        {items.map(item => createElement(item))}
+        {imgs.map(item => createElement(item))}
       </StyledResponsiveGridLayout>
     </div>
   )
