@@ -21,32 +21,9 @@ const StyledApp = styled.div`
 `
 
 function App() {
-  const [imgFiles, setImgFiles] = useState([])
-
-  function onChange(event) {
-    let { files } = event.target
-
-    if (FileReader && files && files.length) {
-      for (const file of files) {
-        let reader = new FileReader()
-        reader.onload = () => {
-          setImgFiles(prevImgs => [...prevImgs, reader.result])
-        }
-        reader.readAsDataURL(file)
-      }
-    }
-  }
-
   return (
     <StyledApp>
-      <label htmlFor='img'>Upload an image</label>
-      <input type="file" name='img' acccept='image/*' multiple {...{onChange}} />
-
-      {/* <ul>
-        {imgFiles.map(imgFile => <li><img src={imgFile}/></li>)}
-      </ul> */}
-      
-      <Layout {...{imgFiles, setImgFiles}} className='layout' rowHeight={100} cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }} onLayoutChange={() => {}}/>
+      <Layout className='layout' rowHeight={100} cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }} onLayoutChange={() => {}}/>
     </StyledApp>
   )
 }
