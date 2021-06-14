@@ -5,10 +5,34 @@ import GridItem from "./GridItem";
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
+function getFromLS(key) {
+  let ls = {};
+  if (global.localStorage) {
+    try {
+      ls = JSON.parse(global.localStorage.getItem("rgl-8")) || {};
+    } catch (e) {
+      /*Ignore*/
+    }
+  }
+  return ls[key];
+}
+
+function saveToLS(key, value) {
+  if (global.localStorage) {
+    global.localStorage.setItem(
+      "rgl-8",
+      JSON.stringify({
+        [key]: value
+      })
+    );
+  }
+}
+
 function Layout(props) {
   const [imgs, setImgs] = useState([])
   const [counter, setCounter] = useState(0)
   const [cols, setCols] = useState(null)
+  const [layouts, setLayouts] = useState(getFromLS("layouts") || {})
 
   async function onChange(event) {
     const { files } = event.target
@@ -35,12 +59,10 @@ function Layout(props) {
         })
         promises.push(promise)
       }
-
       const newImgs = await Promise.all(promises).catch(error => console.error(error))
       setCounter(prevCount => prevCount + files.length)
       setImgs(prevImgs => [...prevImgs, ...newImgs])
     }
-
     event.target.value = '' // Reset value because user may want to submit the same pictures again. onChange will detect "change" from nothing to the same pictures
   }
 
@@ -56,11 +78,21 @@ function Layout(props) {
     setImgs(prevImgs => prevImgs.filter(img => img.i !== i))
   }
 
+  function onLayoutChange(_, ls) {
+    saveToLS("layouts", ls)
+    setLayouts(ls)
+  }
+
   return (
     <>
       <label htmlFor='img'>Upload an image</label>
       <input type="file" name='img' acccept='image/*' multiple {...{onChange}} />
-      <ResponsiveReactGridLayout onBreakpointChange={(_, cols) => setCols(cols)} {...props} >
+      <ResponsiveReactGridLayout
+        onBreakpointChange={(_, cols) => setCols(cols)} 
+        onLayoutChange={(_, layouts) => onLayoutChange(_, layouts)}
+        {...{layouts}}
+        {...props} 
+      >
         {imgs.map(img => createElement(img))}
       </ResponsiveReactGridLayout>
     </>
