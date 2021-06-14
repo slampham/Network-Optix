@@ -50,7 +50,7 @@ code {
 }
 
 .react-grid-item.react-grid-placeholder {
-  background: red;
+  background: green;
   opacity: 0.2;
   transition-duration: 100ms;
   z-index: 2;
@@ -70,12 +70,13 @@ code {
 .react-grid-item > .react-resizable-handle::after {
   content: "";
   position: absolute;
-  right: 3px;
-  bottom: 3px;
-  width: 5px;
-  height: 5px;
-  border-right: 2px solid rgba(0, 0, 0, 0.4);
-  border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+
+  right: 5px;
+  bottom: 5px;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid rgba(255, 255, 255, 0.4);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
 }
 
 .react-resizable-hide > .react-resizable-handle {

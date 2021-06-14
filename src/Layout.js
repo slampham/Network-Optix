@@ -1,29 +1,9 @@
 import React, { useState } from "react";
-import styled from 'styled-components'
 import { Responsive, WidthProvider } from "react-grid-layout";
+
+import GridItem from "./GridItem";
+
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
-
-const StyledResponsiveGridLayout = styled(ResponsiveReactGridLayout)`
-  div {
-    img {
-      width: 100%;
-      height: 100%;
-    }
-
-    .remove {
-      position: absolute;
-      right: 2px;
-      top: 0;
-      cursor: pointer;
-
-      text-shadow:
-        0.07em 0 black,
-        0 0.07em black,
-        -0.07em 0 black,
-        0 -0.07em black;
-    }
-  }
-`
 
 function Layout(props) {
   const [imgs, setImgs] = useState([])
@@ -42,7 +22,7 @@ function Layout(props) {
         const promise = new Promise(resolve => {
           const reader = new FileReader()
           reader.onload = () => {
-            resolve({ // Add a new item. It must have a unique key!
+            resolve({ // Add a new img. It must have a unique key!
               i: "n" + (counter + i),
               x: ((imgs.length + i) * 2) % (cols || 12),
               y: Infinity, // puts it at the bottom
@@ -64,26 +44,25 @@ function Layout(props) {
     event.target.value = '' // Reset value because user may want to submit the same pictures again. onChange will detect "change" from nothing to the same pictures
   }
 
-  function createElement(el) {
+  function createElement(img) {
     return (
-      <div key={el.i} data-grid={el}>
-        <img src={el.file} alt="img" />
-        <span className="remove" onClick={() => onRemoveItem(el.i)}>x</span>
+      <div key={img.i} data-grid={img}  >
+        <GridItem {...{img, onRemoveItem}} />
       </div>
     );
   }
 
   function onRemoveItem(i) {
-    setImgs(prevImgs => prevImgs.filter(item => item.i !== i))
+    setImgs(prevImgs => prevImgs.filter(img => img.i !== i))
   }
 
   return (
     <>
       <label htmlFor='img'>Upload an image</label>
       <input type="file" name='img' acccept='image/*' multiple {...{onChange}} />
-      <StyledResponsiveGridLayout onBreakpointChange={(_, cols) => setCols(cols)} {...props} >
-        {imgs.map(item => createElement(item))}
-      </StyledResponsiveGridLayout>
+      <ResponsiveReactGridLayout onBreakpointChange={(_, cols) => setCols(cols)} {...props} >
+        {imgs.map(img => createElement(img))}
+      </ResponsiveReactGridLayout>
     </>
   )
 }
