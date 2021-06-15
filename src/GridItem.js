@@ -1,4 +1,3 @@
-import { useRef } from 'react'
 import styled from 'styled-components'
 import X from './X'
 
@@ -29,21 +28,10 @@ const StyledGridItem = styled.div`
 `
 
 function GridItem({img, onRemoveItem}) {
-  const overlayRef = useRef(null)
-
-  function onMouseEnter() {
-    overlayRef.current.style.display = 'flex'
-  }
-
-  function onMouseLeave() {
-    overlayRef.current.style.display = 'none'
-  }
-
   return (
-    <StyledGridItem {...{onMouseEnter, onMouseLeave}}>
-      <img src={img.file} alt="img"/>
-
-      <div className='buttons-overlay' ref={overlayRef} >
+    <StyledGridItem >
+      <img src={img.file} alt="grid-img"/>
+      <div className='buttons-overlay'>
         <X onClick={() => onRemoveItem(img.i)} />
       </div>
     </StyledGridItem>

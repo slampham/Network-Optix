@@ -5,7 +5,7 @@
 }
 
 body {
-  background-color: rgb(20, 20, 20);
+  background-color: rgb(15,15,15);
 
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -50,8 +50,8 @@ code {
 }
 
 .react-grid-item.react-grid-placeholder {
-  background: green;
-  opacity: 0.2;
+  background: rgb(6,64,9);
+  opacity: 0.5;
   transition-duration: 100ms;
   z-index: 2;
   -webkit-user-select: none;
@@ -75,8 +75,8 @@ code {
   bottom: 5px;
   width: 10px;
   height: 10px;
-  border-right: 2px solid rgba(255, 255, 255, 0.4);
-  border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+  border-right: 2px solid rgba(255, 255, 255, 0.2);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
 }
 
 .react-resizable-hide > .react-resizable-handle {
@@ -87,4 +87,20 @@ code {
   bottom: 0;
   right: 0;
   cursor: se-resize;
+}
+.react-grid-item > .react-resizable-handle.react-resizable-handle-e {
+  top: 50%;
+  margin-top: -10px;
+  cursor: ew-resize;
+}
+.react-grid-item > .react-resizable-handle.react-resizable-handle-e {
+  right: 0;
+  transform: rotate(315deg);
+}
+.react-grid-item > .react-resizable-handle.react-resizable-handle-s {
+  left: 50%;
+  margin-left: -10px;
+  cursor: ns-resize;
+  bottom: 0;
+  transform: rotate(45deg);
 }
