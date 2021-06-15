@@ -1,4 +1,4 @@
-# [Network Optix](https://main.d308yhozibp3gs.amplifyapp.com/)
+# [Network Optix](https://master.d1zzqg828wz0ph.amplifyapp.com/)
 > Add any number of images on the layout, move them, resize, remove, and reorder as you like
 
 ## Technologies
