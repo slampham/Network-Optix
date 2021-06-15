@@ -32,29 +32,6 @@ function isValidImgFile(fName) {
 
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
-function getFromLS(key) {
-  let ls = {};
-  if (global.localStorage) {
-    try {
-      ls = JSON.parse(global.localStorage.getItem("rgl-8")) || {};
-    } catch (e) {
-      /*Ignore*/
-    }
-  }
-  return ls[key];
-}
-
-function saveToLS(key, value) {
-  if (global.localStorage) {
-    global.localStorage.setItem(
-      "rgl-8",
-      JSON.stringify({
-        [key]: value
-      })
-    );
-  }
-}
-
 function Layout(props) {
   const [imgs, setImgs] = useState([])
   const [counter, setCounter] = useState(0)  // Counter to know where to place next img at
@@ -114,11 +91,6 @@ function Layout(props) {
 
   function onRemoveItem(i) {
     setImgs(prevImgs => prevImgs.filter(img => img.i !== i))  // Because all imgs have unique keys 'i', you can filter one out
-  }
-
-  function onLayoutChange(_, ls) {
-    saveToLS("layouts", ls)
-    setLayouts(ls)
   }
 
   return (
