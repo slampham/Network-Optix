@@ -1,52 +1,14 @@
-## Personal notes to myself (you can ignore)
-### Huge bugs to watch out for:
+# [Network Optix](https://main.d308yhozibp3gs.amplifyapp.com/)
+> Add any number of images on the layout, move them, resize, remove, and reorder as you like
 
-Note that when you're making a for loop over each file, the file reader takes a while to load and read the file. Therefore, you can't just setState after the for loop because the files almost certainly were not read by the time you setState with new items.
+## Technologies
+* **Frontend**: HTML, CSS, JavaScript, React
+* **Libraries**: styled-components (CSS-in-JS), react-grid-layout
+* **Deployment**: AWS Amplify
 
-    function onChange(event) {
-      const { files } = event.target
+## General info
+You may add any number of images onto the layout, although I do notice that it starts to lag heavily after 15-20 images are added. It is also mobile responsive so the grid system will automatically adjust depending on the viewport.
 
-      if (FileReader && files && files.length) {
-        const newItems = []
+## Contact
+Created by [@spencerpham](https://www.spencerpham.dev/) - feel free to contact me!
 
-        for (const [i, file] of Object.entries(files)) {
-          const reader = new FileReader()
-          reader.onload = () => newItems.push({ // Add a new item. It must have a unique key!
-            i: "n" + (counter + parseInt(i)),
-            x: ((items.length + newItems.length) * 2) % (cols || 12),
-            y: Infinity, // puts it at the bottom
-            w: 2,
-            h: 2,
-            file: reader.result,
-          })
-          reader.readAsDataURL(file)
-        }
-
-        setCounter(prevCount => prevCount + files.length)
-        setItems(prevItems => [...prevItems, ...newItems])
-      }
-    }
-
-I tried fixing the issue by setting state at the last filereader.onload.
-
-    for (const [i, file] of Object.entries(files)) {
-      const reader = new FileReader()
-      reader.onload = () => {
-        newItems.push({ // Add a new item. It must have a unique key!
-          i: "n" + (counter + parseInt(i)),
-          x: ((items.length + newItems.length) * 2) % (cols || 12),
-          y: Infinity, // puts it at the bottom
-          w: 2,
-          h: 2,
-          file: reader.result,
-        })
-
-        if (i == files.length - 1) {
-          setCounter(prevCount => prevCount + files.length)
-          setItems(prevItems => [...prevItems, ...newItems])
-        }
-      }
-      reader.readAsDataURL(file)
-    }
-
-However, I realized this may also cause a problem. It's not guaranteed that on the last reader.onload, the other filereader.onloads will also be completed. Therefore, you have to wait for all of them using await Promise.all()
