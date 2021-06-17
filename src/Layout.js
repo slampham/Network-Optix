@@ -40,6 +40,7 @@ function Layout(props) {
   const [imgs, setImgs] = useState([])
   const [counter, setCounter] = useState(0)  // Counter to know where to place next img at
   const [cols, setCols] = useState(null)     // Cols required to know where to place next img at
+  const [layouts, setLayouts] = useState({})
 
   async function onChange(event) {
     const { files } = event.target
@@ -64,8 +65,15 @@ function Layout(props) {
                 file: reader.result,
               })
             }
-            else {
-              reject(`".${fileType(file.name)}" is not a valid img filetype`)
+            else { // Check the rest of the files for invalid file types
+              const invalidFileTypes = []
+              for (let j = i; j < files.length; ++j) {
+                if (!isValidImgFile(files[j].name)) {
+                  invalidFileTypes.push(fileType(files[j].name))
+                }
+              }
+
+              reject(`"${invalidFileTypes}" are not valid image filetype(s)`)
             }
           }
           reader.readAsDataURL(file)
@@ -101,7 +109,12 @@ function Layout(props) {
     <StyledGridLayout>
       <label htmlFor='img' className='upload'>Upload image(s)</label>
       <input type="file" name='img' acccept='image/*' title=" " multiple {...{onChange}} />
-      <ResponsiveReactGridLayout onBreakpointChange={(_, cols) => setCols(cols)} {...props} >
+      <ResponsiveReactGridLayout 
+        onBreakpointChange={(_, cols) => setCols(cols)}
+        onLayoutChange={(_, layouts) => setLayouts(layouts)}
+        layouts={layouts}
+        {...props} 
+      >
         {imgs.map(img => createElement(img))}
       </ResponsiveReactGridLayout>
     </StyledGridLayout>
