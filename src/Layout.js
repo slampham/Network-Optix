@@ -30,6 +30,10 @@ function isValidImgFile(fName) {
   return imgFileTypes.indexOf(fName.split('.').pop()) > -1;
 }
 
+function fileType(fName) {
+  return fName.split('.').pop()
+}
+
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 function Layout(props) {
@@ -61,7 +65,7 @@ function Layout(props) {
               })
             }
             else {
-              reject('Must upload valid img filetypes!')
+              reject(`".${fileType(file.name)}" is not a valid img filetype`)
             }
           }
           reader.readAsDataURL(file)
